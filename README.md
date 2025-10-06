@@ -17,5 +17,9 @@ Safety is a crucial aspect of any construction site. To prevent unexpected incid
 
 We have scraped around 12,000 images from the internet to train multiple object detection models that can identify safety equipment on construction sites.
 
+## The goals
 
+For this project, our objectives are as follows:
 
+- To detect six safety items — helmet, gloves, mask, safety glasses, safety boots, and vest — along with six other common construction-related objects, including trucks, excavators, cranes, ladders, and workers.
+- To train and evaluate different types of object detection models in order to identify the most effective one for this task.
