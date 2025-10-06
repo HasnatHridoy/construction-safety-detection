@@ -2,7 +2,6 @@
 
 <br>
 
-
 <div align="center">
 
 <a href="https://universe.roboflow.com/vision-works/cosntruction-safety-3-baqry"><img src="readme_glossaries/robo.png"></a>
