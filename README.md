@@ -1,11 +1,29 @@
 ![V-Safe: Vison based construction safety detection](readme_glossaries/banner.png)
 
 
-<div align="center">
-  
-[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-orange?style=for-the-badge&logo=huggingface&logoColor=white)](https://huggingface.co/hasnatz/v-safe-rf-detr)
-[![Roboflow](https://img.shields.io/badge/Roboflow-purple?style=for-the-badge&logo=roboflow)](https://universe.roboflow.com/vision-works/cosntruction-safety-3-baqry)
+<div>
+
+<a href="https://huggingface.co/hasnatz/v-safe-rf-detr"><img src="readme_glossaries/hug.png"></a> &nbsp;&nbsp;
+<a href="https://universe.roboflow.com/vision-works/cosntruction-safety-3-baqry"><img src="readme_glossaries/robo.png"></a>
 
 </div>
 
-               
+## Problem Statement
+
+Safety is a crucial aspect of any construction site. To prevent unexpected incidents or even life-threatening accidents, ensuring safety in construction environments is essential. In this project, our goal is to find solutions for enhancing construction safety using computer vision.
+
+We have scraped around 12,000 images from the internet to train multiple object detection models that can identify safety equipment on construction sites.
+
+## The goals
+
+For this project, our objectives are as follows:
+
+- To detect six safety items — helmet, gloves, mask, safety glasses, safety boots, and vest — along with six other common construction-related objects, including trucks, excavators, cranes, ladders, and workers.
+- To train and evaluate different types of object detection models in order to identify the most effective one for this task.
+
+## Results
+
+We trained three different object detection models and selected **RF-DETR Medium** as the most suitable for our detection task. The model achieved a **Mean Average Precision (mAP@50–90)** score of **0.72**. Below are some annotated results produced by our model.
+
+> **Note:** For detailed performance metrics and annotated results of each model, please refer to the **"Reproduction of this Project"** section.
+
