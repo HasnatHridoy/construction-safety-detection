@@ -12,6 +12,8 @@
 
 
 
+
+
 ## Problem Statement
 
 Safety is a crucial aspect of any construction site. To prevent unexpected incidents or even life-threatening accidents, ensuring safety in construction environments is essential. In this project, our goal is to find solutions for enhancing construction safety using computer vision.
