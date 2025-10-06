@@ -20,3 +20,10 @@ For this project, our objectives are as follows:
 
 - To detect six safety items — helmet, gloves, mask, safety glasses, safety boots, and vest — along with six other common construction-related objects, including trucks, excavators, cranes, ladders, and workers.
 - To train and evaluate different types of object detection models in order to identify the most effective one for this task.
+
+## Results
+
+We trained three different object detection models and selected **RF-DETR Medium** as the most suitable for our detection task. The model achieved a **Mean Average Precision (mAP@50–90)** score of **0.72**. Below are some annotated results produced by our model.
+
+> **Note:** For detailed performance metrics and annotated results of each model, please refer to the **"Reproduction of this Project"** section.
+
