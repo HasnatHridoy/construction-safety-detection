@@ -27,3 +27,4 @@ We trained three different object detection models and selected **RF-DETR Medium
 
 > **Note:** For detailed performance metrics and annotated results of each model, please refer to the **"Reproduction of this Project"** section.
 
+<img src="readme_glossaries/image_result_1.png" alt="Annotated result image 1" width="50%">
