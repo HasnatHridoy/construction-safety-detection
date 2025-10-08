@@ -66,6 +66,14 @@ In this section we will provide the step by step guide for reproducing this proj
 The images were scraped from Google, Bing, and DuckDuckGo using iCrawler and ddgs. We then combined the collected images, removed duplicates, and kept only those in .jpg format.
 And upload the unannotated dataset to the Kaggle.
 
+<a target="_blank" href="https://colab.research.google.com/github/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Data%20Collection/image_scraping_%26_cleaning.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+<br>
+
+<br>
+
 > Note: You need to set up the Kaggle API key. <br>
 > Go to your Kaggle Account Settings → API → Create New API Token. <br>
 > This will download a file named kaggle.json. <br>
