@@ -75,7 +75,15 @@ And upload the unannotated dataset to the Kaggle.
 <br>
 
 > Note: You need to set up the Kaggle API key. <br>
-> Go to your Kaggle Account Settings → API → Create New API Token. <br>
-> This will download a file named kaggle.json. <br>
-> Upload this file to your notebook. <br>
-> Further instructions are provided within the notebook. 
+> - Go to your Kaggle Account Settings → API → Create New API Token. <br>
+> - This will download a file named kaggle.json. <br>
+> - Upload this file to your notebook. <br>
+> - Further instructions are provided within the notebook. 
+
+
+#### Image labeling
+
+We used Grounded SAM 2 for the image auto labeling then we uploaded the image on the Roboflow.
+
+
+
