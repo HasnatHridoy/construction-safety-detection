@@ -80,10 +80,62 @@ And upload the unannotated dataset to the Kaggle.
 > - Upload this file to your notebook. <br>
 > - Further instructions are provided within the notebook. 
 
+<br>
 
 #### Image labeling
 
 We used Grounded SAM 2 for the image auto labeling then we uploaded the image on the Roboflow.
+
+<a target="_blank" href="https://colab.research.google.com/github/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Labeling/Image_labelling.ipynb">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
+
+> Note: You need Roboflow account to upload the image to Roboflow
+> - create a Roboflow account
+> - create a project in your workspace
+> - click 'settings' -> 'API key' to get your API
+> - open your project and check the url in the browser it should look like this https://app.roboflow.com/your_workspace_name/your_project_name/other
+> - copy your workspace and project name
+> - Further instructions are provided within the notebook.
+
+<br>
+
+#### Annotation review
+
+After uploading the images you should check the images for any mislabeled image to remove them. So go to your project in Roboflow and review the images.
+
+#### Dataset creation
+
+- Go to your project on Roboflow.
+- Select the 'Version' from the sidebar.
+- Select "Create new version"
+- Adjust your "Train/Test Split" (we have used 78% for train, 20% for validation & 2% for testing.)
+- Adjust your 'Preprocessing' step. (For preprocessing we have used Auto-Orient and Resize (Fit within 640×640) to decrease training time and increase performance by applying these transformations to all images in the dataset.)
+- Setup you data 'Augmentation' (For image augmentation we have used Flip (Horizontal, Vertical), 90 
+∘
+  Rotate (Clockwise, Counter-Clockwise, Upside Down), Crop (8% Min Zoom, 23% Max Zoom), Rotation (Between ±13 
+∘
+ ), Shear (±14 
+∘
+  Horizontal, ±4 
+∘
+  Vertical), Grayscale (Apply to 7% of images), Hue (Between ±19 
+∘
+ ), Saturation (Between ±30%), Brightness (Between ±19%), Exposure (Between ±15%), Blur (Up to 2.6px), and Noise (Up to 1.88% of pixels).)
+- Click the 'Create' and select 'Maximum Version Size' (we use 2x).
+
+#### Dataset uses 
+
+Before using the dataset you must use the proper format of the dataset. We have used Yolov11, Yolov12 and RFDETR models for our training so we used the 'yolo11 format' for Yolo11 model, 'yolo12 format' for the Yolo12 model and "coco' format for the RFDETR model. To select your proper format of the dataset:
+- After creating the dataset click 'Download dataset' and select proper format.
+- Select 'Show download code' then select "continue"
+
+> Note: You don't need to create whole dataset for different format. Just download the format you need.
+
+#### Model Training
+
+For this project we have used three model two from Yolo family (YOLOv11n & YOlOv12s) and one from the RF-DETR family (RF-DETR medium). Bellow are the training notebook of the models.
+
 
 
 
