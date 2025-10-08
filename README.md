@@ -49,5 +49,25 @@ In this section we will provide the step by step guide for reproducing this proj
 
 *fig.: High level overview of the workflow*
 
+<br>
+
+<img width="1533" height="1421" alt="workflow_detailed" src="https://github.com/user-attachments/assets/9d836ab6-9258-46fd-b0cb-10657e1bbfbd" />
+
+*fig.: Detailed workflow map*
+
 </div>
 
+<br>
+
+<br>
+
+#### Image scraping & cleaning
+
+The images were scraped from Google, Bing, and DuckDuckGo using iCrawler and ddgs. We then combined the collected images, removed duplicates, and kept only those in .jpg format.
+And upload the unannotated dataset to the Kaggle.
+
+> Note: You need to set up the Kaggle API key. <br>
+> Go to your Kaggle Account Settings → API → Create New API Token. <br>
+> This will download a file named kaggle.json. <br>
+> Upload this file to your notebook. <br>
+> Further instructions are provided within the notebook. 
