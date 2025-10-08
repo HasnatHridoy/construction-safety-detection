@@ -12,7 +12,7 @@
 
 Safety is a crucial aspect of any construction site. To prevent unexpected incidents or even life-threatening accidents, ensuring safety in construction environments is essential. In this project, our goal is to find solutions for enhancing construction safety using computer vision.
 
-We have scraped around 12,000 images from the internet to train multiple object detection models that can identify safety equipment on construction sites.
+We have scraped around 10,000 images from the internet and after cleaning we used 9600 images to train multiple object detection models that can identify safety equipment on construction sites.
 
 ## The goals
 
@@ -126,7 +126,7 @@ After uploading the images you should check the images for any mislabeled image 
 
 #### Dataset uses 
 
-Before using the dataset you must use the proper format of the dataset. We have used Yolov11, Yolov12 and RFDETR models for our training so we used the 'yolo11 format' for Yolo11 model, 'yolo12 format' for the Yolo12 model and "coco' format for the RFDETR model. To select your proper format of the dataset:
+Before using the dataset you must use the proper format of the dataset. We have used Yolov11, Yolov12 and RFDETR models for our training so we used the 'yolo11 format' for Yolo11 model, 'yolo12 format' for the Yolo12 model and "coco" format for the RFDETR model. To select your proper format of the dataset:
 - After creating the dataset click 'Download dataset' and select proper format.
 - Select 'Show download code' then select "continue"
 
@@ -134,8 +134,23 @@ Before using the dataset you must use the proper format of the dataset. We have 
 
 #### Model Training
 
-For this project we have used three model two from Yolo family (YOLOv11n & YOlOv12s) and one from the RF-DETR family (RF-DETR medium). Bellow are the training notebook of the models.
+For this project we have used three model two from Yolo family (YOLOv11n & YOlOv12s) and one from the RF-DETR family (RF-DETR medium). Bellow are the training notebook of the models. All models are trained on T4 GPU on Kaggle.
+
+YOLOv11n: We have trained this model for 80 epoch. After training we have achived mAP-50:95 (Mean Average Precision averaged over multiple Intersection over Union (IoU) thresholds.)
+0.613
+
+<img width="80%" alt="yolov11n_training_result" src="https://github.com/user-attachments/assets/1730343c-9414-4eeb-8cc2-efbfb1b4b6fa" />
+
+YOLOv12s: We have trained this model for 65 epoch. After training we have achived mAP-50:95 value of 0.625
+
+<img width="2400" height="1200" alt="yolov12s_training_result" src="https://github.com/user-attachments/assets/3a21bb4e-b608-440d-92ea-37f28ac8fa1b" />
+
+RF-DETR Medium: We have trained this model for 10 epoch. After training we have achived mAP-50:95 of 0.72
+
+<img width="1550" height="673" alt="image" src="https://github.com/user-attachments/assets/c540f293-44be-40e1-8f0a-f0e00a2843f7" />
 
 
+
+<img width="1790" height="617" alt="image" src="https://github.com/user-attachments/assets/b9137305-dd97-4d66-b0f4-9c27c7e74d2c" />
 
 
