@@ -247,7 +247,7 @@ Interestingly, we observed that *all models were trained on single-class object 
 
 While the inference speed of YOLO models was notably faster, we believe that RF-DETR’s inference performance can be improved by using a larger batch size during video-based inference. 
 
-#### Model conversion
+### Model conversion
 
 The model’s PyTorch checkpoint was converted to ONNX format using FP32 precision and a static input shape. 
 Both onnx and checkpoint has uploaded to the <a href="https://huggingface.co/hasnatz/v-safe-rf-detr">Huggingface model hub</a>
@@ -269,3 +269,10 @@ We have deployed the model on <a href='https://huggingface.co/spaces/hasnatz/v-s
 ## API integration with GitHub Pages
 
 The deployed model API has been integrated with our GitHub Pages website. Implementation details related to the site are available in the `github_page_asset` folder.
+
+## Limitation & Future update
+
+While the deployed model shows strong performance in detecting close objects, its accuracy decreases for small or distant objects. Moreover, multi-object detection remains a challenge. Future work will focus on addressing these limitations.
+
+**We warmly welcome your contributions to this project!**
+
