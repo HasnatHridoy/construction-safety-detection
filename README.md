@@ -59,7 +59,6 @@ In this section we will provide the step by step guide for reproducing this proj
 
 <br>
 
-<br>
 
 #### Image scraping & cleaning
 
@@ -89,6 +88,10 @@ We used Grounded SAM 2 for the image auto labeling then we uploaded the image on
 <a target="_blank" href="https://colab.research.google.com/github/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Labeling/Image_labelling.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
+
+<br>
+
+<br>
 
 > Note: You need Roboflow account to upload the image to Roboflow
 > - create a Roboflow account
