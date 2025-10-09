@@ -271,7 +271,7 @@ We have deployed the model on <a href='https://huggingface.co/spaces/hasnatz/v-s
 
 ## API integration with GitHub Pages
 
-The deployed model API has been integrated with our GitHub Pages website. Implementation details related to the site are available in the `docs` folder.
+The deployed model API has been integrated with our <a href='https://hasnathridoy.github.io/construction-safety-detection/'> GitHub Page website </a>. Implementation details related to the site are available in the `docs` folder.
 
 ## Limitation & Future update
 
