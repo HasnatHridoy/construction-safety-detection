@@ -252,5 +252,18 @@ While the inference speed of YOLO models was notably faster, we believe that RF-
 The model’s PyTorch checkpoint was converted to ONNX format using FP32 precision and a static input shape. 
 Both onnx and checkpoint has uploaded to the <a href="https://huggingface.co/hasnatz/v-safe-rf-detr">Huggingface model hub</a>
 
+## Model Deployment
+
+We have deployed the model on <a href='https://huggingface.co/spaces/hasnatz/v-safe-demo'> Huggingface Space </a>. The implementation can be found in Huggingface Space and also in the `Deployment` folder.
+
+<br>
+
+<div align='center'>
+
+  <img width="75%" alt="image" src="https://github.com/user-attachments/assets/c6fc50c4-d036-4d7b-82f0-a31fc529face" />
+
+</div>
+
+## API integration with GitHub Pages
 
 
