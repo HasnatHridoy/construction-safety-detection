@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Vision-Based Construction Safety Detection</title>
+    <link rel="icon" type="image/png" href="image/fabicon.png" />
+    <link rel="modulepreload" href="https://esm.sh/@gradio/client" />
+
+
+    <!-- Tailwind CDN: async load to avoid render-blocking -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography" media="print" onload="this.media='all'"></script>
+
+    <!-- Preload Google Fonts stylesheet, then load it non-blocking -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" onload="this.rel='stylesheet'">
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    </noscript>
+
+    <!-- Material Icons: async load -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/icon?family=Material+Icons" onload="this.rel='stylesheet'">
+    <noscript>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </noscript>
+
+    <!-- Font Awesome: async load -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      media="print" onload="this.media='all'">
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#f59e0b", // Amber 500
+                        "background-light": "#f8fafc", // Slate 50
+                        "background-dark": "#0F0F11", // Slate 900
+                    },
+                    fontFamily: {
+                        display: ["Poppins", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        .material-icons {
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        /* Add smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+              
+        /* Fixed navigation bar two */
+        .fixed-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: theme("colors.background-light"
+                );
+            /* Default light mode */
+            backdrop-filter: blur(5px);
+        }
+
+        .dark .fixed-nav {
+            background-color: theme("colors.background-dark");
+            /* Dark mode */
+        }
+
+        .confidence-slider-style {
+            /* Track Fill (left of thumb) is #151515 (Dark) */
+            /* Track Unfilled (right of thumb) is #AFAFAF (Light Gray) */
+            background: linear-gradient(to right, #151515 0%, #151515 var(--track-fill), #AFAFAF var(--track-fill), #AFAFAF 100%);
+        }
+
+        /* Dark Mode Track Color (Overridden by the .dark class) */
+        .dark .confidence-slider-style {
+            /* Track Fill (left of thumb) is #D9D9D9 (Light Gray) */
+            /* Track Unfilled (right of thumb) is #464646 (Dark Gray) */
+            background: linear-gradient(to right, #D9D9D9 0%, #D9D9D9 var(--track-fill), #464646 var(--track-fill), #464646 100%);
+        }
+
+        /* Webkit (Chrome, Safari) Thumb */
+        .confidence-slider-style::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #151515;
+            /* White thumb stays consistent */
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            margin-top: -3px;
+            /* Center the thumb vertically */
+        }
+
+        /* Firefox Thumb */
+        .confidence-slider-style::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #151515;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* DARK MODE THUMB: Override to White/Light */
+        .dark .confidence-slider-style::-webkit-slider-thumb {
+            background: white;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+        }
+
+        .dark .confidence-slider-style::-moz-range-thumb {
+            background: white;
+        }
+    </style>
+    <script>
+    // Set theme class on <html> before CSS loads
+    try {
+      const theme = localStorage.getItem("color-theme");
+      if (
+        theme === "dark" ||
+        (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    } catch (e) {}
+
+    // Set correct logo before render
+    window.__updateLogo = function() {
+      var logoImg = document.getElementById("logo-img");
+      if (!logoImg) return;
+      if (document.documentElement.classList.contains("dark")) {
+        logoImg.src = "image/logo.png";
+      } else {
+        logoImg.src = "image/logo_light.png";
+      }
+    };
+    // Call after DOMContentLoaded
+    document.addEventListener("DOMContentLoaded", window.__updateLogo);
+  </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-200">
+    <header class="fixed-nav w-full">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 grid grid-cols-3 items-center">
+            <div class="flex items-center space-x-4">
+                <img alt="Project Logo" class="w-40 h-auto" id="logo-img" src="image/logo.png" />
+            </div>
+            <nav class="hidden md:flex items-center space-x-6 justify-center">
+                <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
+                    href="#demo">Demo</a>
+                <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
+                    href="#about">About</a>
+                <a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
+                    href="#author">Author</a>
+            </nav>
+            <div class="flex justify-end">
+                <button
+                    class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-background-light dark:focus:ring-offset-background-dark"
+                    id="theme-toggle">
+                    <span class="material-icons" id="theme-icon">dark_mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section id="hero" class="relative text-white overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="h-full w-full bg-cover bg-center" style="background-image: url('image/banner.png')"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent"></div>
+        </div>
+
+        <div
+            class="relative container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-36 flex items-center min-h-[32rem] lg:min-h-[42rem]">
+            <div class="w-full lg:w-3/4 text-left z-10">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight text-white">
+                    Vision-Based Construction Safety Detection
+                </h1>
+                <p class="mt-4 text-lg md:text-xl text-slate-300 max-w-xl">
+                    Utilizing computer vision to automatically detect safety gear and
+                    enhance safety protocols on construction sites.
+                </p>
+
+                <a href="#demo" id="demo-scroll-button"
+                    class="inline-block mt-8 bg-indigo-600 text-white rounded-full py-3 px-8 text-lg font-semibold shadow-2xl shadow-indigo-600/50 hover:bg-indigo-700 hover:scale-[1.03] transition-all duration-300 ease-in-out">
+                    Try the Demo
+                </a>
+            </div>
+
+            <div class="hidden lg:block lg:w-1/2">
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24" id="demo">
+        <div class="flex flex-col items-center justify-center p-4">
+            <h1
+                class="text-slate-800 dark:text-white text-3xl sm:text-4xl md:text-[48px] font-normal leading-normal mb-20 text-center">
+                See the Detection on Action
+            </h1>
+
+            <div class="relative w-11/12 max-w-xl animate-on-scroll">
+
+                <div class="absolute inset-0 rounded-[31px] -z-0 blur-2xl opacity-0 transition-opacity duration-1000 ease-out pointer-events-none"
+                    style="background: radial-gradient(circle, rgba(129, 140, 248, 0.4) 0%, rgba(251, 191, 36, 0.4) 100%);">
+                </div>
+
+                <div class="relative z-10 w-full h-auto rounded-[31px] bg-white dark:bg-[#0F0F11] border border-slate-300 dark:border-[#484847] p-5 sm:p-7 flex flex-col items-center space-y-6 sm:space-y-8
+                transition-all duration-1000 ease-out translate-y-4 shadow-md">
+
+                    <label for="file-upload" id="upload-box"
+                        class="w-full aspect-video rounded-[22px] bg-slate-200 dark:bg-[#151515] flex flex-col items-center justify-center text-center cursor-pointer relative overflow-hidden">
+                        <input type="file" id="file-upload" accept="image/*,video/*" class="hidden" />
+
+                        <div id="placeholder-content"
+                            class="absolute inset-0 flex flex-col items-center justify-center space-y-3 transition-opacity duration-300">
+                            <svg class="h-8 w-8 text-slate-500 dark:text-[#6A6A6A]" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p class="text-slate-500 dark:text-[#6A6A6A] text-sm sm:text-base font-normal">
+                                Upload an image / a video <br>or<br> Use example from below.
+                            </p>
+                        </div>
+
+                        <img id="image-preview" class="w-full h-full object-contain hidden" alt="Preview" />
+
+                        <video id="video-preview" controls loop muted playsinline
+                            class="w-full h-full object-contain hidden"></video>
+
+                        <button id="fullscreen-btn"
+                            class="absolute top-3 right-12 z-20 hidden w-8 h-8 rounded-full bg-white/80 dark:bg-black/70 text-slate-900 dark:text-white flex items-center justify-center shadow-lg hover:bg-white focus:outline-none transition-colors"
+                            title="Fullscreen">
+                            <span class="material-icons text-xl">fullscreen</span>
+                        </button>
+
+                        <button id="clear-preview-btn"
+                            class="absolute top-3 right-3 z-20 hidden w-8 h-8 rounded-full bg-white/80 dark:bg-black/70 text-slate-900 dark:text-white flex items-center justify-center shadow-lg hover:bg-white focus:outline-none"
+                            title="Clear Media">
+                            <span class="material-icons text-xl">close</span>
+                        </button>
+
+                        <button id="error-clear-btn"
+                            class="absolute top-3 right-3 z-20 hidden w-8 h-8 rounded-full bg-red-600/80 dark:bg-red-700/70 text-white flex items-center justify-center shadow-lg hover:bg-red-600 focus:outline-none transition-colors"
+                            title="Clear Error">
+                            <span class="material-icons text-xl">close</span>
+                        </button>
+                    </label>
+
+                    <div class="flex flex-wrap justify-center w-full gap-2 sm:gap-3" id="example-container">
+                        <div class="example-item w-[18%] aspect-square rounded-[18px] bg-slate-200 dark:bg-[#151515] relative overflow-hidden cursor-pointer"
+                            data-type="video" data-path="Examples/video_example.mp4">
+
+                            <img src="Examples/Video_thumb.png" alt="Video Example"
+                                class="w-full h-full object-cover" />
+
+                            <!-- Darker overlay -->
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                                <div
+                                    class="w-12 h-12 flex items-center justify-center rounded-full bg-black/70 shadow-md">
+                                    <svg class="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="example-item w-[18%] aspect-square rounded-[18px] bg-slate-200 dark:bg-[#151515] relative overflow-hidden cursor-pointer"
+                            data-type="image" data-path="Examples/image_example_1.jpg">
+                            <img src="Examples/image_example_1.jpg" alt="Image Example 1"
+                                class="w-full h-full object-cover" />
+                        </div>
+
+                        <div class="example-item w-[18%] aspect-square rounded-[18px] bg-slate-200 dark:bg-[#151515] relative overflow-hidden cursor-pointer"
+                            data-type="image" data-path="Examples/image_example_2.webp">
+                            <img src="Examples/image_example_2.webp" alt="Image Example 2"
+                                class="w-full h-full object-cover" />
+                        </div>
+
+                        <div class="example-item w-[18%] aspect-square rounded-[18px] bg-slate-200 dark:bg-[#151515] relative overflow-hidden cursor-pointer"
+                            data-type="image" data-path="Examples/image_example_3.jpg">
+                            <img src="Examples/image_example_3.jpg" alt="Image Example 3"
+                                class="w-full h-full object-cover" />
+                        </div>
+
+                        <div class="example-item w-[18%] aspect-square rounded-[18px] bg-slate-200 dark:bg-[#151515] relative overflow-hidden cursor-pointer"
+                            data-type="image" data-path="Examples/image_example_4.jpg">
+                            <img src="Examples/image_example_4.jpg" alt="Image Example 4"
+                                class="w-full h-full object-cover" />
+                        </div>
+                    </div>
+
+                    <div class="w-full pt-4 pb-2 px-1">
+                        <label for="confidence-slider"
+                            class="text-sm font-normal text-slate-500 dark:text-[#a0a0a0] mb-3 block">Confidence</label>
+                        <div class="flex items-center space-x-3">
+                            <input type="range" id="confidence-slider" min="0" max="100" step="1" value="25"
+                                class="w-full h-2 rounded-full appearance-none cursor-pointer bg-slate-300 dark:bg-[#464646] confidence-slider-style"
+                                style="--track-fill: 25%;">
+                            <span id="confidence-value-display"
+                                class="value-display text-sm font-semibold text-slate-800 dark:text-white bg-slate-200 dark:bg-[#333333] px-3 py-1 rounded-md min-w-[50px] text-right">25%</span>
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-center pt-2">
+                        <button id="submit-button" disabled
+                            class="w-[130px] h-[39px] rounded-full /* Initial INACTIVE State: Pill is #0F0F11, Text is #464646 (Your requested grayed-out state) */ bg-[#0F0F11] dark:bg-[#464646] text-[#464646] dark:text-[#0F0F11] text-base font-semibold flex items-center justify-center opacity-50 cursor-not-allowed transition-all duration-200">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-28" id="about">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-medium text-center text-slate-900 dark:text-white mb-8">
+                About the Project
+            </h2>
+            <div class="prose prose-lg dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 text-center">
+                <p>
+                    The entire project—from dataset preparation to deployment—was carried out independently. I created a
+                    custom dataset by labeling thousands of images, then fine-tuned multiple state-of-the-art object
+                    detection models (including YOLO and DETR) to evaluate performance in real-time scenarios.
+                    After experimentation, the RF-DETR Medium model was selected for deployment due to its balance of
+                    speed and accuracy.
+
+                </p>
+                <p>
+                    The trained model achieved a mean average precision (mAP) of 72.26 (50–90 IoU) during testing,
+                    demonstrating strong capability for detecting safety gear in real-world conditions.
+                </p>
+                <p>
+                    For more details about the training process and model implementation, please visit the project
+                    repositories on GitHub and Hugging Face. The dataset used in this project is publicly available on
+                    Roboflow.
+                </p>
+            </div>
+            <div class="mt-11 flex justify-center space-x-6">
+                <a class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-slate-900 dark:bg-slate-200 dark:text-slate-900 hover:bg-slate-700 dark:hover:bg-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition"
+                    href="#">
+                    <span class="material-icons text-sm mr-2">code</span>
+                    Project Repo
+                </a>
+
+                <a class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-amber-500 hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 transition"
+                    href="https://huggingface.co/hasnatz/v-safe-rf-detr">
+                    <span class="material-icons text-sm mr-2">hub</span>
+                    Hugging Face
+                </a>
+
+                <!-- Roboflow -->
+                <a class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition"
+                    href="https://universe.roboflow.com/vision-works/cosntruction-safety-3-baqry">
+                    <span class="material-icons text-sm mr-2">auto_awesome</span>
+                    Roboflow
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-16 bg-slate-100 dark:bg-[#151515] " id="author">
+        <div class="max-w-6xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-4">
+                About the Author
+            </h2>
+            <img alt="Author's photo" class="w-24 h-24 rounded-full mx-auto mb-4" src="image/author.jpg" />
+            <h3 class="text-xl font-semibold text-slate-800 dark:text-slate-100">
+                Hasnat Abdullah
+            </h3>
+            <p class="text-slate-600 dark:text-slate-400">
+                Junior AI &amp; Machine Learning Engineer
+            </p>
+            <p class="mt-4 max-w-full mx-auto text-slate-600 dark:text-slate-300">
+                Hello, I’m Hasnat. I am deeply passionate about Natural Language Processing (NLP) and Computer Vision,
+                with an MSc in Software <br> Engineering. I enjoy building end-to-end AI solutions and continuously
+                exploring
+                cutting-edge technologies. <br>
+                I’m open to collaborations, research opportunities, and project work.
+            </p>
+
+            <div class="flex justify-center pt-5 space-x-4">
+
+                <a href="https://www.facebook.com/ahhridoy47"
+                    class="w-11 h-11 rounded-full **bg-[#828282]** flex items-center justify-center hover:opacity-80 transition">
+                    <i class="fab fa-facebook-f **text-black** text-xl"></i>
+                </a>
+
+                <a href="https://www.linkedin.com/in/abul-hasnat-hridoy/"
+                    class="w-11 h-11 rounded-full **bg-[#828282]** flex items-center justify-center hover:opacity-80 transition">
+                    <i class="fab fa-linkedin-in **text-black** text-xl"></i>
+                </a>
+
+                <a href="https://x.com/hridoyez"
+                    class="w-11 h-11 rounded-full **bg-[#828282]** flex items-center justify-center hover:opacity-80 transition">
+                    <i class="fab fa-twitter **text-black** text-xl"></i>
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="text-center py-8 text-slate-500 dark:text-slate-400">
+        <p>© 2025 Hasnat Abdullah. All Rights Reserved.</p>
+    </footer>
+    </div>
+
+    <script type="module">
+        
+        //import { Client } from "https://esm.sh/@gradio/client";
+
+        const themeToggle = document.getElementById("theme-toggle");
+        const themeIcon = document.getElementById("theme-icon");
+        const header = document.querySelector("header");
+        const logoImg = document.getElementById("logo-img");
+        const fileUpload = document.getElementById("file-upload");
+        const imagePreview = document.getElementById("image-preview");
+        const placeholderContent = document.getElementById("placeholder-content");
+        const submitButton = document.getElementById("submit-button");
+        const uploadBox = document.getElementById("upload-box");
+        const clearPreviewBtn = document.getElementById("clear-preview-btn");
+        const videoPreview = document.getElementById("video-preview");
+        const errorClearBtn = document.getElementById("error-clear-btn");
+        const exampleItems = document.querySelectorAll('.example-item');
+        const fullscreenBtn = document.getElementById("fullscreen-btn");
+        const mediaContainer = document.getElementById("upload-box");
+        const lightbox = document.getElementById("lightbox");
+        const lightboxContent = document.getElementById("lightbox-content");
+        const closeLightbox = document.getElementById("close-lightbox");
+
+
+
+
+        // --- NEW CONFIDENCE SLIDER ELEMENTS ---
+        const confidenceSlider = document.getElementById("confidence-slider");
+        const confidenceValueDisplay = document.getElementById("confidence-value-display");
+        // --------------------------------------
+
+        const DEFAULT_PLACEHOLDER_TEXT = "Upload an image / a video or use example from below";
+
+        // ... (Your theme logic remains here, unchanged) ...
+        function updateLogo() {
+            if (document.documentElement.classList.contains("dark")) {
+                logoImg.src = "image/logo.png";
+            } else {
+                logoImg.src = "image/logo_light.png";
+            }
+        } // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+
+        if (
+            localStorage.getItem("color-theme") === "dark" ||
+            (!("color-theme" in localStorage) &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+            document.documentElement.classList.add("dark");
+            themeIcon.textContent = "light_mode";
+        } else {
+            document.documentElement.classList.remove("dark");
+            themeIcon.textContent = "dark_mode";
+        }
+        updateLogo(); // Call on load
+
+        themeToggle.addEventListener("click", function () {
+            // toggle icons
+            themeIcon.textContent =
+                themeIcon.textContent === "dark_mode" ? "light_mode" : "dark_mode"; // if set via local storage previously
+            if (localStorage.getItem("color-theme")) {
+                if (localStorage.getItem("color-theme") === "light") {
+                    document.documentElement.classList.add("dark");
+                    localStorage.setItem("color-theme", "dark");
+                } else {
+                    document.documentElement.classList.remove("dark");
+                    localStorage.setItem("color-theme", "light");
+                } // if NOT set via local storage previously
+            } else {
+                if (document.documentElement.classList.contains("dark")) {
+                    document.documentElement.classList.remove("dark");
+                    localStorage.setItem("color-theme", "light");
+                } else {
+                    document.documentElement.classList.add("dark");
+                    localStorage.setItem("color-theme", "dark");
+                }
+            }
+            updateLogo(); // Update logo on theme change
+        }); // Update header background based on theme
+
+        function updateHeaderBackground() {
+            // NOTE: This relies on CSS variables being accessible. If they aren't, this won't work perfectly.
+            if (document.documentElement.classList.contains("dark")) {
+                header.style.backgroundColor = getComputedStyle(
+                    document.documentElement
+                ).getPropertyValue("--tw-colors-background-dark");
+            } else {
+                header.style.backgroundColor = getComputedStyle(
+                    document.documentElement
+                ).getPropertyValue("--tw-colors-background-light");
+            }
+        }
+
+        updateHeaderBackground(); // Listen for theme changes and update header background
+
+        themeToggle.addEventListener("click", updateHeaderBackground);
+        window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener("change", updateHeaderBackground); // Listen for OS theme changes and update logo
+
+        window
+            .matchMedia("(prefers-color-scheme: dark)")
+            .addEventListener(
+                "change",
+                updateLogo
+            );
+
+
+        /* --- Demo Section Logic --- */
+
+        // Function to update the button's state and style based on file presence
+        function updateButtonState(isFileSelected) {
+            if (isFileSelected) {
+                // ACTIVE STATE
+                submitButton.disabled = false;
+                submitButton.classList.remove("opacity-50", "cursor-not-allowed");
+                submitButton.classList.remove("bg-[#0F0F11]", "text-[#464646]");
+                submitButton.classList.add("bg-[#151515]", "text-[#D9D9D9]");
+                submitButton.classList.remove(
+                    "dark:bg-[#0F0F11]",
+                    "dark:text-[#464646]"
+                );
+                submitButton.classList.add(
+                    "dark:bg-[#D9D9D9]",
+                    "dark:text-[#151515]"
+                );
+            } else {
+                // INACTIVE STATE
+                submitButton.disabled = true;
+                submitButton.classList.add("opacity-50", "cursor-not-allowed");
+                submitButton.classList.remove("bg-[#D9D9D9]", "text-[#151515]");
+                submitButton.classList.add("bg-[#0F0F11]", "text-[#464646]");
+                submitButton.classList.remove(
+                    "dark:bg-[#464646]",
+                    "dark:text-[#0F0F11]"
+                );
+                submitButton.classList.add(
+                    "dark:bg-[#464646]",
+                    "dark:text-[#0F0F11]"
+                );
+            }
+        }
+
+        // Function to clear the preview and reset the state
+        function clearFileAndPreview() {
+            fileUpload.type = "text";
+            fileUpload.type = "file";
+
+            imagePreview.src = "";
+            imagePreview.classList.add("hidden");
+            videoPreview.pause();
+            videoPreview.src = "";
+            videoPreview.classList.add("hidden");
+            placeholderContent.textContent = DEFAULT_PLACEHOLDER_TEXT;
+            placeholderContent.classList.remove("hidden");
+            clearPreviewBtn.classList.add("hidden");
+            errorClearBtn.classList.add("hidden");
+            fullscreenBtn.classList.add("hidden");
+
+
+            updateButtonState(false);
+        }
+
+        // Add event listener to the clear button (for success state)
+        clearPreviewBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            clearFileAndPreview();
+        });
+
+        // 🚀 NEW: Add event listener for the error clear button
+        errorClearBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            clearFileAndPreview();
+        });
+
+        // NEW: Add event listeners to all example boxes
+        exampleItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const path = item.getAttribute('data-path');
+                const type = item.getAttribute('data-type');
+
+                if (path && type) {
+                    loadExampleMedia(path, type);
+                }
+            });
+        });
+
+
+        fullscreenBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Clear old content
+            lightboxContent.innerHTML = "";
+
+            if (!imagePreview.classList.contains("hidden")) {
+                // Handle image
+                const imgClone = imagePreview.cloneNode(true);
+                imgClone.classList.remove("hidden");
+                imgClone.classList.add("max-h-[80vh]", "max-w-full", "rounded-lg", "shadow-lg");
+                lightboxContent.appendChild(imgClone);
+            }
+            else if (!videoPreview.classList.contains("hidden")) {
+                // Handle video
+                const videoClone = document.createElement("video");
+                videoClone.classList.add("max-h-[80vh]", "max-w-full", "rounded-lg", "shadow-lg");
+                videoClone.setAttribute("controls", "true");
+
+                // If videoPreview uses src directly
+                if (videoPreview.src) {
+                    videoClone.src = videoPreview.src;
+                }
+
+                // Copy <source> children if they exist
+                videoPreview.querySelectorAll("source").forEach(src => {
+                    const newSource = document.createElement("source");
+                    newSource.src = src.src;
+                    newSource.type = src.type;
+                    videoClone.appendChild(newSource);
+                });
+
+                lightboxContent.appendChild(videoClone);
+            }
+
+            // Show modal
+            lightbox.classList.remove("hidden");
+            lightbox.classList.add("flex");
+        });
+
+        // Close lightbox
+        const closeLightboxHandler = () => {
+            const video = lightboxContent.querySelector("video");
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+
+            // Always hide modal
+            lightbox.classList.add("hidden");
+            lightbox.classList.remove("flex");
+        };
+
+        closeLightbox.addEventListener("click", closeLightboxHandler);
+        lightbox.addEventListener("click", (e) => {
+            if (e.target === lightbox) closeLightboxHandler();
+        });
+
+        // Optional: Close on ESC key
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !lightbox.classList.contains("hidden")) {
+                closeLightboxHandler();
+            }
+        });
+
+
+
+
+
+
+        async function loadExampleMedia(mediaPath, mediaType) {
+            // 1. Clear any existing state
+            clearFileAndPreview();
+
+            try {
+                // Fetch the file content from the server
+                const response = await fetch(mediaPath);
+                if (!response.ok) {
+                    throw new Error(`Failed to load example media: ${response.statusText}`);
+                }
+
+                // Convert the response to a Blob
+                const blob = await response.blob();
+
+                // Create a File object (needed to mimic file input behavior and update the button state correctly)
+                const fileExtension = mediaPath.split('.').pop();
+                const mimeType = mediaType === 'video' ? 'video/mp4' : `image/${fileExtension === 'jpg' ? 'jpeg' : fileExtension}`;
+                const exampleFile = new File([blob], `example.${fileExtension}`, { type: mimeType });
+
+                // Create a URL for the media preview
+                const mediaUrl = URL.createObjectURL(exampleFile);
+
+                // 2. Display the media
+                if (mediaType === 'image') {
+                    imagePreview.src = mediaUrl;
+                    imagePreview.classList.remove('hidden');
+                } else if (mediaType === 'video') {
+                    videoPreview.src = mediaUrl;
+                    videoPreview.classList.remove('hidden');
+                    videoPreview.play();
+                }
+
+                // 3. Update the UI state
+                placeholderContent.classList.add('hidden');
+                clearPreviewBtn.classList.remove('hidden');
+                fullscreenBtn.classList.remove('hidden');
+
+                updateButtonState(true);
+
+                // OPTIONAL: Manually assign the file to the file input (allows the submit button to access the file easily)
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(exampleFile);
+                fileUpload.files = dataTransfer.files;
+
+            } catch (error) {
+                console.error("Error loading example:", error);
+                placeholderContent.textContent = 'Error loading example. Please check file paths.';
+                placeholderContent.classList.remove('hidden');
+                errorClearBtn.classList.remove('hidden');
+            }
+        }
+
+
+
+
+
+
+        fileUpload.addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Clear any previous media before loading new media
+                imagePreview.classList.add("hidden");
+                videoPreview.classList.add("hidden");
+                errorClearBtn.classList.add("hidden"); // Ensure error button is hidden // Determine file type
+
+                const isImage = file.type.startsWith("image/");
+                const isVideo = file.type.startsWith("video/"); // 1. Create a URL for the media preview
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const mediaUrl = e.target.result;
+                    if (isImage) {
+                        imagePreview.src = mediaUrl;
+                        imagePreview.classList.remove("hidden");
+                    } else if (isVideo) {
+                        videoPreview.src = mediaUrl;
+                        videoPreview.classList.remove("hidden");
+                        videoPreview.play(); // Start playback automatically
+                    }
+                    placeholderContent.classList.add("hidden");
+                    clearPreviewBtn.classList.remove("hidden"); // SHOW the clear button
+                    fullscreenBtn.classList.remove("hidden");
+
+                };
+                reader.readAsDataURL(file); // 2. Update button state to ACTIVE
+                updateButtonState(true);
+            } else {
+                // 3. Reset to INACTIVE state
+                clearFileAndPreview();
+            }
+        });
+
+        // Initial setup to ensure the button starts INACTIVE
+        updateButtonState(false);
+
+
+        /* --- CONFIDENCE SLIDER LOGIC --- */
+        // Function to update the slider track fill (for the visual effect)
+        function updateSliderFill(val) {
+            const percentage = (val - confidenceSlider.min) / (confidenceSlider.max - confidenceSlider.min) * 100;
+            confidenceSlider.style.setProperty('--track-fill', `${percentage}%`);
+        }
+
+        confidenceSlider.addEventListener('input', (event) => {
+            const confidencePercentage = event.target.value;
+            confidenceValueDisplay.textContent = `${confidencePercentage}%`;
+            updateSliderFill(confidencePercentage);
+        });
+
+        // Initialize the slider look on load
+        updateSliderFill(confidenceSlider.value);
+        /* --- END CONFIDENCE SLIDER LOGIC --- */
+
+
+        // 2. API Logic // ---------------------------------------------
+
+        // ---------------------------------------------
+        let gradioModule = null;
+
+        submitButton.addEventListener("click", async () => {
+            const file = fileUpload.files[0];
+            if (!file) return;
+
+            // *** CRITICAL: Get Slider Value and Convert to Number (FLOAT) ***
+            const confidencePercentage = parseInt(confidenceSlider.value, 10);
+
+            // 1. Calculate the decimal value (e.g., 25 -> 0.25) and format it
+            const decimalValueString = (confidencePercentage / 100).toFixed(2);
+
+            // 2. CRITICAL FIX: Convert the formatted string back to a float (number) 
+            // to prevent the Python "TypeError: '<' not supported between instances of 'str' and 'float'"
+            const apiConfidenceValue = parseFloat(decimalValueString);
+
+
+            // Determine file type, select endpoint, and prepare payload
+            const isImage = file.type.startsWith("image/");
+            const isVideo = file.type.startsWith("video/");
+            let endpoint = null;
+            let payload = {};
+
+            if (isImage) {
+                endpoint = "/predict_image";
+                payload = {
+                    image: file,
+                    conf: apiConfidenceValue, // *** USING THE CONVERTED VALUE ***
+                };
+            } else if (isVideo) {
+                endpoint = "/predict_video";
+                payload = {
+                    video: {
+                        video: file,
+                        subtitles: null,
+                    },
+                    conf: apiConfidenceValue, // *** USING THE CONVERTED VALUE ***
+                };
+            } else {
+                placeholderContent.textContent =
+                    "Error: File type not supported. Try again."; // 🚀 MODIFIED TEXT
+                placeholderContent.classList.remove("hidden");
+                errorClearBtn.classList.remove("hidden"); // 🚀 SHOW ERROR CLEAR BUTTON
+                return;
+            } // 1. Setup UI for Processing
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Processing...";
+            clearPreviewBtn.classList.add("hidden"); // Hide the clear button during processing
+            errorClearBtn.classList.add("hidden"); // Hide error button during processing // Remove any error messages/placeholders that might be visible
+            fullscreenBtn.classList.add("hidden");
+
+            placeholderContent.textContent = ""; // 2. Connect to API and Predict
+            try {
+                // Only import if not already loaded
+                if (!gradioModule) {
+                    gradioModule = await import("https://esm.sh/@gradio/client");
+                }
+                const { Client } = gradioModule;
+
+                const client = await Client.connect("hasnatz/v-safe-demo");
+
+                if (isVideo) {
+                    // Video-specific message using innerHTML for formatting
+                    placeholderContent.innerHTML =
+                        'Video processing needs some time. Please wait.<br><span class="text-xs italic">Note: The video size and fps reduced for quick processing</span>';
+                } else {
+                    // Image/Generic message
+                    placeholderContent.textContent = "Processing... Please wait.";
+                }
+                placeholderContent.classList.remove("hidden"); // Hide current media while processing
+                imagePreview.classList.add("hidden");
+                videoPreview.classList.add("hidden"); // API Call using the determined endpoint
+
+                const result = await client.predict(endpoint, payload);
+                console.log("API Result Object:", result);
+
+                let annotatedMedia = null;
+
+                if (isImage) {
+                    // For Image: Data is flat in the first array element.
+                    annotatedMedia = result.data?.[0];
+                } else if (isVideo) {
+                    // For Video: Data is nested inside the 'video' key of the first element.
+                    const videoWrapper = result.data?.[0];
+                    annotatedMedia = videoWrapper?.video;
+                }
+
+                if (annotatedMedia && annotatedMedia.url) {
+                    // Overwrite the preview with the ANNOTATED URL
+                    if (isImage) {
+                        imagePreview.src = annotatedMedia.url;
+                        imagePreview.classList.remove("hidden");
+                    } else if (isVideo) {
+                        videoPreview.src = annotatedMedia.url;
+                        videoPreview.classList.remove("hidden");
+                        videoPreview.load(); // Load the new video source
+                        videoPreview.play();
+                    } // Hide placeholder and re-enable clear button
+                    placeholderContent.classList.add("hidden");
+                    clearPreviewBtn.classList.remove("hidden"); // Show standard clear button
+                    fullscreenBtn.classList.remove("hidden");
+                } else {
+                    // If API fails or returns no media (General Failure)
+                    placeholderContent.textContent =
+                        "Annotation failed or returned no media. Try again."; // 🚀 MODIFIED TEXT
+                    placeholderContent.classList.remove("hidden");
+                    errorClearBtn.classList.remove("hidden"); // 🚀 SHOW ERROR CLEAR BUTTON
+                    clearPreviewBtn.classList.add("hidden"); // Hide standard clear button
+                    fullscreenBtn.classList.add("hidden");
+                }
+            } catch (err) {
+                // API Connection/Processing Crash (Catch Block Error)
+                console.error("API Error:", err);
+                placeholderContent.textContent = `Processing failed due to an API error. Try again.`; // 🚀 MODIFIED TEXT
+                placeholderContent.classList.remove("hidden");
+                errorClearBtn.classList.remove("hidden"); // 🚀 SHOW ERROR CLEAR BUTTON
+                clearPreviewBtn.classList.add("hidden"); // Hide standard clear button
+                fullscreenBtn.classList.add("hidden");
+            } finally {
+                // 4. Reset UI
+                submitButton.disabled = false;
+                submitButton.textContent = "Submit";
+            }
+        });
+
+
+
+        /* --- Intersection Observer Script --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Get the element we want to observe
+            const targetElement = document.querySelector('.animate-on-scroll');
+
+            if (!targetElement) return; // Stop if the element isn't there
+
+            // 2. Inject the custom CSS for the final animated state
+            const style = document.createElement('style');
+            style.textContent = `
+    /* Define the final state for the glow */
+    .animate-on-scroll.is-visible .absolute {
+        opacity: 0.75 !important;
+    }
+    /* Define the final state for the main box (lifts it up by 4px and uses only the default Tailwind shadow for lift) */
+    .animate-on-scroll.is-visible > div:nth-child(2) {
+        transform: translateY(-4px); 
+        
+        /* CRITICAL FIX: REMOVED THE CUSTOM BLUE SHADOW */
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+`;
+            document.head.appendChild(style);
+
+            // 3. Define the Intersection Observer logic
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observerCallback = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+
+            // 4. Create and start the observer
+            const observer = new IntersectionObserver(observerCallback, options);
+            observer.observe(targetElement);
+        });
+        /* --- END Intersection Observer Script --- */
+    </script>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50">
+        <div class="relative max-w-5xl max-h-[90vh] w-auto h-auto bg-white dark:bg-black rounded-xl shadow-2xl p-2">
+            <button id="close-lightbox"
+                class="absolute top-2 right-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-black/70 hover:bg-white text-slate-900 dark:text-white">
+                ✕
+            </button>
+            <div id="lightbox-content" class="flex items-center justify-center">
+                <!-- Media will be cloned here -->
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
