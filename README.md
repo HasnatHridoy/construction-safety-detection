@@ -23,7 +23,7 @@ For this project, our objectives are as follows:
 
 ## Results
 
-We trained three different object detection models and selected **RF-DETR Medium** as the most suitable for our detection task. The model achieved a **Mean Average Precision (mAP@50–90)** score of **0.72**. Below are some annotated results produced by our model.
+We trained three different object detection models and selected **RF-DETR Medium** as the most suitable for our detection task. The model achieved a **Mean Average Precision (mAP@50–95)** score of **0.72**. Below are some annotated results produced by our model.
 
 > **Note:** For detailed performance metrics and annotated results of each model, please refer to the **"Reproduction of this Project"** section.
 
@@ -132,12 +132,22 @@ Before using the dataset you must use the proper format of the dataset. We have 
 
 > Note: You don't need to create whole dataset for different format. Just download the format you need.
 
-#### Model Training
+<br>
+
+### Model Training
 
 For this project we have used three model two from Yolo family (YOLOv11n & YOlOv12s) and one from the RF-DETR family (RF-DETR medium). Bellow are the training notebook of the models. All models are trained on T4 GPU on Kaggle.
 
+> Note:
+> - Don't Forget to turn on the acclerator from the sidebar.
+> - Use the 'save version' -> 'save & run all (comit)' to run as background instance
+
+<br>
+
 YOLOv11n: We have trained this model for 80 epoch. After training we have achived mAP-50:95 (Mean Average Precision averaged over multiple Intersection over Union (IoU) thresholds.)
 0.613
+
+[![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Model%20training/yolov11n-training.ipynb)
 
 <div align='center'> 
 
@@ -146,9 +156,12 @@ YOLOv11n: We have trained this model for 80 epoch. After training we have achive
 </div>
 
 <br>
+
 <br>
 
 YOLOv12s: We have trained this model for 65 epoch. After training we have achived mAP-50:95 value of 0.625
+
+[![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Model%20training/yolov12s-training.ipynb)
 
 <div align='center'>
 
@@ -157,9 +170,12 @@ YOLOv12s: We have trained this model for 65 epoch. After training we have achive
 </div>
 
 <br>
+
 <br>
 
 RF-DETR Medium: We have trained this model for 10 epoch. After training we have achived mAP-50:95 of 0.72
+
+[![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Model%20training/rf-detr-medium-training.ipynb)
 
 <div align='center'>
   
@@ -167,7 +183,74 @@ RF-DETR Medium: We have trained this model for 10 epoch. After training we have 
 
 </div>
 
+<br>
 
-<img width="1790" height="617" alt="image" src="https://github.com/user-attachments/assets/b9137305-dd97-4d66-b0f4-9c27c7e74d2c" />
+### Model testing & compairson
+
+The comparison of all models, based on performance on our testing dataset, is provided below
+
+<div align='center'>
+  
+<img width="75%" alt="image" src="https://github.com/user-attachments/assets/39c1a979-fcae-4df6-92ef-da6c3b9d2806" />
+
+*fig: Comparison of three models in different metrics*
+
+</div>
+
+<div align='center'>
+
+<img width="75%" alt="Screenshot 2025-10-09 110707" src="https://github.com/user-attachments/assets/a08acfa2-989d-4ce6-812d-c2f12a6dac62" />
+
+*fig: Comparison Table for Three Models Across Different Metrics.*
+
+</div>
+
+<br>
+
+<br>
+
+<div align='center'>
+
+<img width="50%" alt="download (7)" src="https://github.com/user-attachments/assets/ecd22ef0-69a8-41da-8745-2011732b5b83" />
+
+*fig: Confusion matrix for RF-DETR Medium*
+
+<br>
+
+<img width="50%" alt="confusion_matrix_normalized for yolov12s" src="https://github.com/user-attachments/assets/fcb6a143-6202-4e84-9c05-97f7e29983e9" />
+
+*fig: Confusion matrix for YOLOv12s*
+
+<br>
+
+<br>
+
+<img width="50%" alt="confusion_matrix_normalized (3)" src="https://github.com/user-attachments/assets/04557c33-7ae4-4f20-8096-7bb94e644bf3" />
+
+*fig: Confusion matrix for YOLOv11n*
+
+<img width="75%" alt="Group 38" src="https://github.com/user-attachments/assets/8c63be2a-484d-4418-83d3-13f2a4c8c9be" />
+
+*fig: Inference compairson for three model*
+
+
+</div>
+
+
+#### Model selection for deployment
+
+After testing, we decided to select **RF-DETR (Medium)** for deployment. As shown in the testing section, this model outperformed both **YOLOv11n** and **YOLOv12s.**
+
+Interestingly, we observed that *all models were trained on single-class object instances but evaluated on multi-class object predictions. The YOLO models performed poorly when detecting multiple objects from a single image, even with very low confidence thresholds. Although we included a few multi-class examples during YOLOv12s training, it was not sufficient to improve its performance.*
+
+*In contrast, the RF-DETR model—despite being trained on fewer images and without any image augmentation (due to limited VRAM)—showed a significant improvement in detecting multiple classes within a single image. We suspect that the model’s architecture played a crucial role in this outcome.*
+
+While the inference speed of YOLO models was notably faster, we believe that RF-DETR’s inference performance can be improved by using a larger batch size during video-based inference. 
+
+#### Model conversion
+
+The model’s PyTorch checkpoint was converted to ONNX format using FP32 precision and a static input shape. 
+Both onnx and checkpoint has uploaded to the <a href="https://huggingface.co/hasnatz/v-safe-rf-detr">Huggingface model hub</a>
+
 
 
