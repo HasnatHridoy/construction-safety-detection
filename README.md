@@ -252,6 +252,8 @@ While the inference speed of YOLO models was notably faster, we believe that RF-
 The model’s PyTorch checkpoint was converted to ONNX format using FP32 precision and a static input shape. 
 Both onnx and checkpoint has uploaded to the <a href="https://huggingface.co/hasnatz/v-safe-rf-detr">Huggingface model hub</a>
 
+[![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Model%20export/conversion-to-onnx-and-export-to-huggingface.ipynb)
+
 ## Model Deployment
 
 We have deployed the model on <a href='https://huggingface.co/spaces/hasnatz/v-safe-demo'> Huggingface Space </a>. The implementation can be found in Huggingface Space and also in the `Deployment` folder.
@@ -266,4 +268,4 @@ We have deployed the model on <a href='https://huggingface.co/spaces/hasnatz/v-s
 
 ## API integration with GitHub Pages
 
-
+The deployed model API has been integrated with our GitHub Pages website. Implementation details related to the site are available in the `github_page_asset` folder.
