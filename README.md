@@ -139,16 +139,33 @@ For this project we have used three model two from Yolo family (YOLOv11n & YOlOv
 YOLOv11n: We have trained this model for 80 epoch. After training we have achived mAP-50:95 (Mean Average Precision averaged over multiple Intersection over Union (IoU) thresholds.)
 0.613
 
-<img width="80%" alt="yolov11n_training_result" src="https://github.com/user-attachments/assets/1730343c-9414-4eeb-8cc2-efbfb1b4b6fa" />
+<div align='center'> 
+
+<img width="75%" alt="yolov11n_training_result" src="https://github.com/user-attachments/assets/1730343c-9414-4eeb-8cc2-efbfb1b4b6fa" />
+
+</div>
+
+<br>
+<br>
 
 YOLOv12s: We have trained this model for 65 epoch. After training we have achived mAP-50:95 value of 0.625
 
-<img width="2400" height="1200" alt="yolov12s_training_result" src="https://github.com/user-attachments/assets/3a21bb4e-b608-440d-92ea-37f28ac8fa1b" />
+<div align='center'>
+
+<img width="75%" alt="yolov12s_training_result" src="https://github.com/user-attachments/assets/3a21bb4e-b608-440d-92ea-37f28ac8fa1b" />
+
+</div>
+
+<br>
+<br>
 
 RF-DETR Medium: We have trained this model for 10 epoch. After training we have achived mAP-50:95 of 0.72
 
-<img width="1550" height="673" alt="image" src="https://github.com/user-attachments/assets/c540f293-44be-40e1-8f0a-f0e00a2843f7" />
+<div align='center'>
+  
+<img width="75%" alt="image" src="https://github.com/user-attachments/assets/c540f293-44be-40e1-8f0a-f0e00a2843f7" />
 
+</div>
 
 
 <img width="1790" height="617" alt="image" src="https://github.com/user-attachments/assets/b9137305-dd97-4d66-b0f4-9c27c7e74d2c" />
