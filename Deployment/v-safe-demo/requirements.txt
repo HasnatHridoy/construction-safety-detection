@@ -1,0 +1,7 @@
+gradio==5.47.1
+onnxruntime==1.23.0
+pillow==10.3.0
+numpy==1.26.4
+matplotlib==3.9.2
+requests==2.32.3
+opencv-python
