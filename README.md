@@ -273,6 +273,13 @@ We have deployed the model on <a href='https://huggingface.co/spaces/hasnatz/v-s
 
 The deployed model API has been integrated with our <a href='https://hasnathridoy.github.io/construction-safety-detection/'> GitHub Page website </a>. Implementation details related to the site are available in the `docs` folder.
 
+<div align='center'>
+  
+<img width="75%" alt="image" src="https://github.com/user-attachments/assets/bac64f9e-9114-46ac-8150-20f02fce0af9" />
+
+</div>
+
+
 ## Limitation & Future update
 
 While the deployed model shows strong performance in detecting close objects, its accuracy decreases for small or distant objects. Moreover, multi-object detection remains a challenge. Future work will focus on addressing these limitations.
