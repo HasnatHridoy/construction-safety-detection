@@ -19,7 +19,7 @@ We scraped around 10,000 images from the internet, and after cleaning, we used 9
 
 For this project, our objectives are as follows:
 
-* To detect the following **six safety items**:
+* To detect the following **seven safety items**:
 
   * Helmet
   * Gloves
@@ -27,8 +27,9 @@ For this project, our objectives are as follows:
   * Safety glasses
   * Safety boots
   * Vest
+  * Cone
 
-* Along with six other common **construction-related objects**, including:
+* Along with five other common **construction-related objects**, including:
 
   * Trucks
   * Excavators
