@@ -1,4 +1,5 @@
-# ![V-Safe: Vision-based Construction Safety Detection](readme_glossaries/banner.png)
+
+<img width="1465" height="544" alt="banner_github_cap2" src="https://github.com/user-attachments/assets/944c751d-5fe9-4643-a39b-8504145ee507" />
 
 <div>
 
