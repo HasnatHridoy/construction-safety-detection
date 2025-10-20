@@ -12,7 +12,6 @@ model_path = hf_hub_download(
 
 model = RTDETR_ONNX(model_path)
 
-# Ready-made example images (local files or URLs)
 examples = [
     ["examples/121113-F-LV838-027.jpg"],
     ["examples/goggles_bing_construction_goggles_000109.jpg"],
