@@ -1,25 +1,23 @@
-![V-Safe: Vison based construction safety detection](readme_glossaries/banner.png)
-
+# ![V-Safe: Vision-based Construction Safety Detection](readme_glossaries/banner.png)
 
 <div>
 
-<a href="https://huggingface.co/hasnatz/v-safe-rf-detr"><img src="readme_glossaries/hug.png"></a> &nbsp;&nbsp;
-<a href="https://universe.roboflow.com/vision-works/cosntruction-safety-3-baqry"><img src="readme_glossaries/robo.png"></a>
+<a href="https://huggingface.co/hasnatz/v-safe-rf-detr"><img src="readme_glossaries/hug.png"></a>    <a href="https://universe.roboflow.com/vision-works/cosntruction-safety-3-baqry"><img src="readme_glossaries/robo.png"></a>
 
 </div>
 
 ## Problem Statement
 
-Safety is a crucial aspect of any construction site. To prevent unexpected incidents or even life-threatening accidents, ensuring safety in construction environments is essential. In this project, our goal is to find solutions for enhancing construction safety using computer vision.
+Safety is a crucial aspect of any construction site. To prevent unexpected incidents or life-threatening accidents, ensuring safety in construction environments is essential. In this project, our goal is to find solutions for enhancing construction safety using computer vision.
 
-We have scraped around 10,000 images from the internet and after cleaning we used 9600 images to train multiple object detection models that can identify safety equipment on construction sites.
+We scraped around 10,000 images from the internet, and after cleaning, we used 9,600 images to train multiple object detection models that can identify safety equipment on construction sites.
 
-## The goals
+## The Goals
 
 For this project, our objectives are as follows:
 
-- To detect six safety items — helmet, gloves, mask, safety glasses, safety boots, and vest — along with six other common construction-related objects, including trucks, excavators, cranes, ladders, and workers.
-- To train and evaluate different types of object detection models in order to identify the most effective one for this task.
+* To detect six safety items — helmet, gloves, mask, safety glasses, safety boots, and vest — along with six other common construction-related objects, including trucks, excavators, cranes, ladders, and workers.
+* To train and evaluate different types of object detection models to identify the most effective one for this task.
 
 ## Results
 
@@ -31,23 +29,23 @@ We trained three different object detection models and selected **RF-DETR Medium
 
 <img src="readme_glossaries/image_result_1.png" alt="Annotated result image 1" width="50%">
 
-https://github.com/user-attachments/assets/076cdad5-4f0a-4ea5-ac20-ae64dc2c3819
+[https://github.com/user-attachments/assets/076cdad5-4f0a-4ea5-ac20-ae64dc2c3819](https://github.com/user-attachments/assets/076cdad5-4f0a-4ea5-ac20-ae64dc2c3819)
 
 <img width="65%" alt="Screenshot 2025-10-07 120118" src="https://github.com/user-attachments/assets/ed13074a-0d2d-4ad0-bfb8-663232323fe6" />
 
 </div>
 
-## Reproduction of this project
+## Reproduction of This Project
 
-In this section we will provide the step by step guide for reproducing this project
+In this section, we will provide a step-by-step guide for reproducing this project.
 
 ### Workflow
 
 <div align='center'>
 
-<img width="65%" alt="Wrokflow simple" src="https://github.com/user-attachments/assets/07c32f4b-f660-4d79-bea3-7ad005bef807" />
+<img width="65%" alt="Workflow simple" src="https://github.com/user-attachments/assets/07c32f4b-f660-4d79-bea3-7ad005bef807" />
 
-*fig.: High level overview of the workflow*
+*fig.: High-level overview of the workflow*
 
 <br>
 
@@ -59,11 +57,10 @@ In this section we will provide the step by step guide for reproducing this proj
 
 <br>
 
+#### Image Scraping & Cleaning
 
-#### Image scraping & cleaning
-
-The images were scraped from Google, Bing, and DuckDuckGo using iCrawler and ddgs. We then combined the collected images, removed duplicates, and kept only those in .jpg format.
-And upload the unannotated dataset to the Kaggle.
+The images were scraped from Google, Bing, and DuckDuckGo using iCrawler and ddgs. We then combined the collected images, removed duplicates, and kept only those in `.jpg` format.
+Then, upload the unannotated dataset to Kaggle.
 
 <a target="_blank" href="https://colab.research.google.com/github/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Data%20Collection/image_scraping_%26_cleaning.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
@@ -71,19 +68,18 @@ And upload the unannotated dataset to the Kaggle.
 
 <br>
 
+> **Note:** You need to set up the Kaggle API key.
+>
+> * Go to your Kaggle Account Settings → API → Create New API Token.
+> * This will download a file named `kaggle.json`.
+> * Upload this file to your notebook.
+> * Further instructions are provided within the notebook.
+
 <br>
 
-> Note: You need to set up the Kaggle API key. <br>
-> - Go to your Kaggle Account Settings → API → Create New API Token. <br>
-> - This will download a file named kaggle.json. <br>
-> - Upload this file to your notebook. <br>
-> - Further instructions are provided within the notebook. 
+#### Image Labeling
 
-<br>
-
-#### Image labeling
-
-We used Grounded SAM 2 for the image auto labeling then we uploaded the image on the Roboflow.
+We used Grounded SAM 2 for automatic image labeling, then uploaded the labeled images to Roboflow.
 
 <a target="_blank" href="https://colab.research.google.com/github/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Labeling/Image_labelling.ipynb">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
@@ -91,64 +87,60 @@ We used Grounded SAM 2 for the image auto labeling then we uploaded the image on
 
 <br>
 
+> **Note:** You need a Roboflow account to upload the images.
+>
+> * Create a Roboflow account.
+> * Create a project in your workspace.
+> * Click 'Settings' → 'API Key' to get your API.
+> * Open your project and check the URL in the browser — it should look like `https://app.roboflow.com/your_workspace_name/your_project_name/other`.
+> * Copy your workspace and project name.
+> * Further instructions are provided within the notebook.
+
 <br>
 
-> Note: You need Roboflow account to upload the image to Roboflow
-> - create a Roboflow account
-> - create a project in your workspace
-> - click 'settings' -> 'API key' to get your API
-> - open your project and check the url in the browser it should look like this https://app.roboflow.com/your_workspace_name/your_project_name/other
-> - copy your workspace and project name
-> - Further instructions are provided within the notebook.
+#### Annotation Review
 
-<br>
+After uploading, review the dataset and remove any mislabeled images. Go to your project in Roboflow and check for incorrect labels.
 
-#### Annotation review
+#### Dataset Creation
 
-After uploading the images you should check the images for any mislabeled image to remove them. So go to your project in Roboflow and review the images.
+* Go to your project on Roboflow.
+* Select the 'Version' from the sidebar.
+* Select "Create new version".
+* Adjust your Train/Test split (we used 78% for training, 20% for validation, and 2% for testing).
+* Configure your preprocessing step. (We used Auto-Orient and Resize (fit within 640×640) to reduce training time and improve performance.)
+* Set up your data augmentation. (We used Flip (Horizontal, Vertical), 90° Rotate (Clockwise, Counter-Clockwise, Upside Down), Crop (8% Min Zoom, 23% Max Zoom), Rotation (±13°), Shear (±14° Horizontal, ±4° Vertical), Grayscale (7%), Hue (±19°), Saturation (±30%), Brightness (±19%), Exposure (±15%), Blur (Up to 2.6px), and Noise (Up to 1.88%).)
+* Click 'Create' and select 'Maximum Version Size' (we used 2×).
 
-#### Dataset creation
+#### Dataset Usage
 
-- Go to your project on Roboflow.
-- Select the 'Version' from the sidebar.
-- Select "Create new version"
-- Adjust your "Train/Test Split" (we have used 78% for train, 20% for validation & 2% for testing.)
-- Adjust your 'Preprocessing' step. (For preprocessing we have used Auto-Orient and Resize (Fit within 640×640) to decrease training time and increase performance by applying these transformations to all images in the dataset.)
-- Setup you data 'Augmentation' (For image augmentation we have used Flip (Horizontal, Vertical), 90 
-∘
-  Rotate (Clockwise, Counter-Clockwise, Upside Down), Crop (8% Min Zoom, 23% Max Zoom), Rotation (Between ±13 
-∘
- ), Shear (±14 
-∘
-  Horizontal, ±4 
-∘
-  Vertical), Grayscale (Apply to 7% of images), Hue (Between ±19 
-∘
- ), Saturation (Between ±30%), Brightness (Between ±19%), Exposure (Between ±15%), Blur (Up to 2.6px), and Noise (Up to 1.88% of pixels).)
-- Click the 'Create' and select 'Maximum Version Size' (we use 2x).
+Before using the dataset, ensure it is in the correct format. We used YOLOv11, YOLOv12, and RF-DETR models for training, so we selected:
 
-#### Dataset uses 
+* 'yolo11 format' for YOLOv11
+* 'yolo12 format' for YOLOv12
+* 'coco format' for RF-DETR
 
-Before using the dataset you must use the proper format of the dataset. We have used Yolov11, Yolov12 and RFDETR models for our training so we used the 'yolo11 format' for Yolo11 model, 'yolo12 format' for the Yolo12 model and "coco" format for the RFDETR model. To select your proper format of the dataset:
-- After creating the dataset click 'Download dataset' and select proper format.
-- Select 'Show download code' then select "continue"
+To download the proper format:
 
-> Note: You don't need to create whole dataset for different format. Just download the format you need.
+* Click 'Download dataset' and select the format.
+* Select 'Show download code', then click "Continue".
+
+> **Note:** You don't need to recreate the dataset for each format — just download the format you need.
 
 <br>
 
 ### Model Training
 
-For this project we have used three model two from Yolo family (YOLOv11n & YOlOv12s) and one from the RF-DETR family (RF-DETR medium). Bellow are the training notebook of the models. All models are trained on T4 GPU on Kaggle.
+For this project, we used three models — two from the YOLO family (YOLOv11n & YOLOv12s) and one from the RF-DETR family (RF-DETR Medium). Below are the training notebooks for the models. All models were trained on a T4 GPU on Kaggle.
 
-> Note:
-> - Don't Forget to turn on the acclerator from the sidebar.
-> - Use the 'save version' -> 'save & run all (comit)' to run as background instance
+> **Note:**
+>
+> * Don't forget to turn on the accelerator from the sidebar.
+> * Use 'Save Version' → 'Save & Run All (commit)' to run as a background instance.
 
 <br>
 
-YOLOv11n: We have trained this model for 80 epoch. After training we have achived mAP-50:95 (Mean Average Precision averaged over multiple Intersection over Union (IoU) thresholds.)
-0.613
+**YOLOv11n:** We trained this model for 80 epochs. After training, we achieved mAP@50–95 (Mean Average Precision averaged over multiple IoU thresholds) of **0.613**.
 
 [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Model%20training/yolov11n-training.ipynb)
 
@@ -160,9 +152,7 @@ YOLOv11n: We have trained this model for 80 epoch. After training we have achive
 
 <br>
 
-<br>
-
-YOLOv12s: We have trained this model for 65 epoch. After training we have achived mAP-50:95 value of 0.625
+**YOLOv12s:** We trained this model for 65 epochs. After training, we achieved mAP@50–95 of **0.625**.
 
 [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Model%20training/yolov12s-training.ipynb)
 
@@ -174,29 +164,27 @@ YOLOv12s: We have trained this model for 65 epoch. After training we have achive
 
 <br>
 
-<br>
-
-RF-DETR Medium: We have trained this model for 10 epoch. After training we have achived mAP-50:95 of 0.72
+**RF-DETR Medium:** We trained this model for 10 epochs. After training, we achieved mAP@50–95 of **0.72**.
 
 [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Model%20training/rf-detr-medium-training.ipynb)
 
 <div align='center'>
-  
+
 <img width="75%" alt="image" src="https://github.com/user-attachments/assets/c540f293-44be-40e1-8f0a-f0e00a2843f7" />
 
 </div>
 
 <br>
 
-### Model testing & compairson
+### Model Testing & Comparison
 
-The comparison of all models, based on performance on our testing dataset, is provided below
+The comparison of all models, based on performance on our testing dataset, is provided below.
 
 <div align='center'>
-  
+
 <img width="75%" alt="image" src="https://github.com/user-attachments/assets/39c1a979-fcae-4df6-92ef-da6c3b9d2806" />
 
-*fig: Comparison of three models in different metrics*
+*fig: Comparison of three models using different metrics.*
 
 </div>
 
@@ -204,11 +192,9 @@ The comparison of all models, based on performance on our testing dataset, is pr
 
 <img width="75%" alt="Screenshot 2025-10-09 110707" src="https://github.com/user-attachments/assets/a08acfa2-989d-4ce6-812d-c2f12a6dac62" />
 
-*fig: Comparison Table for Three Models Across Different Metrics.*
+*fig: Comparison table for three models across different metrics.*
 
 </div>
-
-<br>
 
 <br>
 
@@ -226,42 +212,37 @@ The comparison of all models, based on performance on our testing dataset, is pr
 
 <br>
 
-<br>
-
 <img width="50%" alt="confusion_matrix_normalized (3)" src="https://github.com/user-attachments/assets/04557c33-7ae4-4f20-8096-7bb94e644bf3" />
 
 *fig: Confusion matrix for YOLOv11n*
 
 <img width="75%" alt="Group 38" src="https://github.com/user-attachments/assets/8c63be2a-484d-4418-83d3-13f2a4c8c9be" />
 
-*fig: Inference compairson for three model*
-
+*fig: Inference comparison for three models*
 
 </div>
 
+#### Model Selection for Deployment
 
-#### Model selection for deployment
+After testing, we selected **RF-DETR (Medium)** for deployment. As shown in the testing section, this model outperformed both **YOLOv11n** and **YOLOv12s.**
 
-After testing, we decided to select **RF-DETR (Medium)** for deployment. As shown in the testing section, this model outperformed both **YOLOv11n** and **YOLOv12s.**
+Interestingly, we observed that all models were trained on single-class object instances but evaluated on multi-class predictions. The YOLO models performed poorly when detecting multiple objects in a single image, even with low confidence thresholds. Although we included a few multi-class examples during YOLOv12s training, it was not enough to improve performance.
 
-Interestingly, we observed that *all models were trained on single-class object instances but evaluated on multi-class object predictions. The YOLO models performed poorly when detecting multiple objects from a single image, even with very low confidence thresholds. Although we included a few multi-class examples during YOLOv12s training, it was not sufficient to improve its performance.*
+In contrast, the RF-DETR model — despite being trained on fewer images and without image augmentation (due to limited VRAM) — showed a significant improvement in detecting multiple classes within a single image. We suspect that the model’s architecture played a crucial role in this outcome.
 
-*In contrast, the RF-DETR model—despite being trained on fewer images and without any image augmentation (due to limited VRAM)—showed a significant improvement in detecting multiple classes within a single image. We suspect that the model’s architecture played a crucial role in this outcome.*
+While the inference speed of YOLO models was notably faster, we believe RF-DETR’s inference performance can be improved by using a larger batch size during video-based inference.
 
-While the inference speed of YOLO models was notably faster, we believe that RF-DETR’s inference performance can be improved by using a larger batch size during video-based inference. 
+### Model Conversion
 
-### Model conversion
-
-The model’s PyTorch checkpoint was converted to ONNX format using FP32 precision and a static input shape. 
-Both onnx and checkpoint has uploaded to the <a href="https://huggingface.co/hasnatz/v-safe-rf-detr">Huggingface model hub</a>
+The model’s PyTorch checkpoint was converted to ONNX format using FP32 precision and a static input shape.
+Both the ONNX model and the checkpoint have been uploaded to the <a href="https://huggingface.co/hasnatz/v-safe-rf-detr">Hugging Face model hub</a>.
 
 [![Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/HasnatHridoy/construction-safety-detection/blob/main/Notebooks/Model%20export/conversion-to-onnx-and-export-to-huggingface.ipynb)
 
 ## Model Deployment
 
-We have deployed the model on <a href='https://huggingface.co/spaces/hasnatz/v-safe-demo'> Huggingface Space </a>. The implementation can be found in Huggingface Space and also in the `Deployment` folder.
-
-<br>
+We deployed the model on <a href='https://huggingface.co/spaces/hasnatz/v-safe-demo'>Hugging Face Space</a>.
+The implementation can be found there and in the `Deployment` folder.
 
 <div align='center'>
 
@@ -269,20 +250,20 @@ We have deployed the model on <a href='https://huggingface.co/spaces/hasnatz/v-s
 
 </div>
 
-## API integration with GitHub Pages
+## API Integration with GitHub Pages
 
-The deployed model API has been integrated with our <a href='https://hasnathridoy.github.io/construction-safety-detection/'> GitHub Page website </a>. Implementation details related to the site are available in the `docs` folder.
+The deployed model API has been integrated with our <a href='https://hasnathridoy.github.io/construction-safety-detection/'>GitHub Pages website</a>.
+Implementation details are available in the `docs` folder.
 
 <div align='center'>
-  
+
 <img width="75%" alt="image" src="https://github.com/user-attachments/assets/bac64f9e-9114-46ac-8150-20f02fce0af9" />
 
 </div>
 
+## Limitations & Future Updates
 
-## Limitation & Future update
-
-While the deployed model shows strong performance in detecting close objects, its accuracy decreases for small or distant objects. Moreover, multi-object detection remains a challenge. Future work will focus on addressing these limitations.
+While the deployed model performs strongly on close objects, its accuracy decreases for small or distant objects. Additionally, multi-object detection remains a challenge. Future work will focus on addressing these limitations.
 
 **We warmly welcome your contributions to this project!**
 
