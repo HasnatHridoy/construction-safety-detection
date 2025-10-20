@@ -16,7 +16,23 @@ We scraped around 10,000 images from the internet, and after cleaning, we used 9
 
 For this project, our objectives are as follows:
 
-* To detect six safety items — helmet, gloves, mask, safety glasses, safety boots, and vest — along with six other common construction-related objects, including trucks, excavators, cranes, ladders, and workers.
+* To detect the following **six safety items**:
+
+  * Helmet
+  * Gloves
+  * Mask
+  * Safety glasses
+  * Safety boots
+  * Vest
+
+* Along with six other common **construction-related objects**, including:
+
+  * Trucks
+  * Excavators
+  * Cranes
+  * Ladders
+  * Workers
+
 * To train and evaluate different types of object detection models to identify the most effective one for this task.
 
 ## Results
