@@ -276,6 +276,7 @@ The implementation can be found there and in the `Deployment` folder.
 
 </div>
 
+
 ## API Integration with GitHub Pages
 
 The deployed model API has been integrated with our <a href='https://hasnathridoy.github.io/construction-safety-detection/'>GitHub Pages website</a>.
@@ -286,6 +287,53 @@ Implementation details are available in the `docs` folder.
 <img width="75%" alt="image" src="https://github.com/user-attachments/assets/bac64f9e-9114-46ac-8150-20f02fce0af9" />
 
 </div>
+
+## Build from Source
+
+This repository is primarily designed to be reproduced on **Kaggle** (or any GPU-enabled environment).
+However, you can still clone the repository locally if you want to **explore the code**, **review notebooks**, or **run deployment demo**.
+
+---
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/HasnatHridoy/construction-safety-detection.git
+cd construction-safety-detection
+```
+
+---
+
+### 2. Environment Setup (Optional for Local Exploration)
+
+If you plan to run the deployment demo, set up a Python environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate      # Linux / Mac
+venv\Scripts\activate         # Windows
+```
+
+---
+
+### 3. Running the Deployment Demo
+
+You can run the demo locally for quick testing:
+
+```bash
+cd deployment/v-safe-demo
+pip install -r requirements.txt
+
+python app.py
+```
+
+Then open [http://localhost:7860](http://localhost:7860) in your browser.
+
+> ⚠️ **Additional Note:**
+> The training notebooks under `notebooks/training` are intended to be executed on **Kaggle** and the `notebooks/image_labelling.ipynb` on **Colab**, as they require GPU acceleration.
+> You can still open and read them locally for understanding or modification.
+> The demo uses pre-trained model weights that can be downloaded from [Hugging Face](https://huggingface.co/hasnatz/v-safe-rf-detr).
+
 
 ## Limitations & Future Updates
 
