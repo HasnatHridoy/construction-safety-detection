@@ -166,7 +166,9 @@ For this project, we used three models — two from the YOLO family (YOLOv11n & 
 
 <div align='center'> 
 
-<img width="75%" alt="yolov11n_training_result" src="https://github.com/user-attachments/assets/1730343c-9414-4eeb-8cc2-efbfb1b4b6fa" />
+<img width="45%" alt="image" src="https://github.com/user-attachments/assets/98aaac69-8ce6-4891-94ce-1c74441498a1" />
+
+*fig: YOLOv11n training and validation performance.*
 
 </div>
 
@@ -178,7 +180,9 @@ For this project, we used three models — two from the YOLO family (YOLOv11n & 
 
 <div align='center'>
 
-<img width="75%" alt="yolov12s_training_result" src="https://github.com/user-attachments/assets/3a21bb4e-b608-440d-92ea-37f28ac8fa1b" />
+<img width="45%" alt="image" src="https://github.com/user-attachments/assets/75d6c789-e974-4034-a930-1eb1136ea809" />
+
+*fig: YOLOv12s training and validation performance.*
 
 </div>
 
@@ -190,7 +194,9 @@ For this project, we used three models — two from the YOLO family (YOLOv11n & 
 
 <div align='center'>
 
-<img width="75%" alt="image" src="https://github.com/user-attachments/assets/c540f293-44be-40e1-8f0a-f0e00a2843f7" />
+<img width="75%" alt="image" src="https://github.com/user-attachments/assets/76d88813-4b3d-4a47-826a-e1a92199a5f2" />
+
+*fig: RF-DETR Medium training performance.*
 
 </div>
 
