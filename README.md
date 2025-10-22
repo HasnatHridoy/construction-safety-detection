@@ -298,7 +298,7 @@ However, you can still clone the repository locally if you want to **explore the
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/HasnatHridoy/construction-safety-detection.git
+git clone https://github.com/HasnatHridoy/construction-safety-equipment-detection.git
 cd construction-safety-detection
 ```
 
