@@ -304,7 +304,7 @@ cd construction-safety-equipment-detection
 
 ---
 
-### 2. Environment Setup (Optional for Local Exploration)
+### 2. Environment Setup
 
 If you plan to run the deployment demo, set up a Python environment:
 
