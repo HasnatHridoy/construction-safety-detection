@@ -284,7 +284,7 @@ Implementation details are available in the `docs` folder.
 
 <div align='center'>
 
-<img width="75%" alt="image" src="https://github.com/user-attachments/assets/bac64f9e-9114-46ac-8150-20f02fce0af9" />
+<img width="75%" alt="site_image" src="https://github.com/user-attachments/assets/157c7a23-25ba-460e-9b31-c15002c43326" />
 
 </div>
 
@@ -299,7 +299,7 @@ However, you can still clone the repository locally if you want to **explore the
 
 ```bash
 git clone https://github.com/HasnatHridoy/construction-safety-equipment-detection.git
-cd construction-safety-detection
+cd construction-safety-equipment-detection
 ```
 
 ---
